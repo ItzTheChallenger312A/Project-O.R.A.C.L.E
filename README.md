@@ -11,15 +11,28 @@ Project O.R.A.C.L.E. không phải là một bot giao dịch tự động đặt
 
 > *"Liệu việc sử dụng LLM để phân tích và diễn giải các sự kiện kinh tế vĩ mô có tạo ra lợi thế dự báo xu hướng giá (sau chi phí giao dịch) tốt hơn các phương pháp đơn giản không dùng AI hay không?"*
 
-Mọi nhận định và dự đoán trong dự án đều được ghi nhận theo thời gian thực (Forward-testing), gắn dấu thời gian bất biến và đối chứng với 4 baseline độc lập trước khi cân nhắc bất kỳ cơ chế đặt lệnh nào.
+Mọi nhận định và dự đoán trong dự án đều được ghi nhận theo thời gian thực (Forward-testing), gắn dấu thời gian bất biến và đối chứng với 4 baseline phương pháp trước khi cân nhắc bất kỳ cơ chế đặt lệnh nào.
 
 ---
 
 ## 🛑 Nguyên tắc bất biến (Core Constraints)
 1. **Zero Real-Money Trading:** Tuyệt đối không giao dịch tiền thật trong toàn bộ giai đoạn nghiên cứu.
 2. **Immutable Predictions:** Mọi dự đoán một khi đã ghi nhận kèm snapshot đầu vào thì không được phép chỉnh sửa hoặc xóa bỏ.
-3. **No Historical Backtesting on LLM:** Tránh hoàn toàn rủi ro rò rỉ dữ liệu (Data Leakage) bằng cách chỉ forward-test LLM trên các sự kiện tương lai.
+3. **Phân tách Hai trục Nghiên cứu rõ ràng:**
+   - **Historical Research (Nghiên cứu hồi cứu):** Sử dụng dữ liệu giá lịch sử để kiểm nghiệm 3 baseline kỹ thuật không dùng LLM.
+   - **Prospective Research (Nghiên cứu tiến cứu):** Thu thập dữ liệu vĩ mô và consensus theo thời gian thực (Point-in-Time) để kiểm nghiệm LLM, triệt tiêu hoàn toàn rủi ro rò rỉ dữ liệu (Data Leakage).
 4. **Data-First & Evidence-Based:** Không tối ưu token, không xây dựng giao diện phức tạp trước khi chứng minh được giá trị thống kê.
+
+---
+
+## 📊 Hệ thống 4 Phương pháp Đối chứng (Baselines)
+
+| Baseline | Nguồn dữ liệu | Cơ chế hoạt động | Giai đoạn triển khai |
+| :--- | :--- | :--- | :--- |
+| **B1: Random Direction** | Random seed | Đoán ngẫu nhiên có kiểm soát | Phase 2 (Historical) |
+| **B2: Historical Base Rate** | Historical price | Tỷ lệ nến tăng/giảm trong 252 phiên rolling | Phase 2 (Historical) |
+| **B3: Previous Trend** | Historical price | Xu hướng phiên liền trước | Phase 2 (Historical) |
+| **B4: Macro Surprise** | Actual vs. Consensus PIT | Bộ luật phản ứng kinh tế vĩ mô chuẩn hóa | Phase 4 trở đi (Prospective) |
 
 ---
 
@@ -48,7 +61,7 @@ Mọi nhận định và dự đoán trong dự án đều được ghi nhận t
 ## 📂 Trạng thái hiện tại (Current Status)
 - **Phase:** Phase 0 — Research Foundation & Feasibility
 - **Instrument:** `EURUSD`
-- **Horizon:** 1 Trading Day (24h)
+- **Horizon:** `1 Trading Session — Snapshot-to-Snapshot` (Snapshot: 15:30 `America/New_York`, Prediction window: 15:30–15:35, Friday/Weekend tách cohort riêng)
 - **Initial Time Checkpoint:** 12 Giờ
 - **LLM Budget hiện tại:** $0.00 USD (Chưa tích hợp LLM cho đến khi hoàn thành Baseline)
 
@@ -56,7 +69,7 @@ Mọi nhận định và dự đoán trong dự án đều được ghi nhận t
 
 ## 📚 Cấu trúc tài liệu (Documentation Tree)
 - `README.md` *(Tài liệu hiện tại)*
-- `00-project-foundation/` *(Đang triển khai)*
+- `docs/00 - Project Overview/` *(Đang triển khai)*
   - `research_charter.md` — Hiến chương nghiên cứu & tiêu chí đánh giá
   - `research_plan.md` — Kế hoạch chi tiết v0.1.2
   - `research_scope.md` — Phạm vi và giới hạn dự án
