@@ -65,7 +65,8 @@ The initial release will not:
 |AI architecture|Hybrid AI|
 |Market coverage|Multi-market|
 |Trading integration|MetaTrader 5 + TradingView|
-|Execution authorization|Human approval required|
+|Execution authorization|Human approval required (Independent Risk Engine + Proposal Lifecycle)|
+|Interaction interface|Telegram Bot (Notification & Approval) + Streamlit Dashboard|
 |Initial trading environment|Paper trading / demo|
 |Backend language|Python|
 |API framework|FastAPI|
@@ -162,6 +163,8 @@ The initial implementation will prioritize XAUUSD and EURUSD before expanding co
 |FR-013|Track token usage and costs|High|
 |FR-014|Support backtesting|Critical|
 |FR-015|Provide research dashboard|Medium|
+|FR-016|Macro-to-Market Mapping (MacroMarketMapper)|High|
+|FR-017|Telegram Human-in-the-Loop approval interface|High|
 
 ---
 
@@ -239,30 +242,29 @@ Every trade proposal must include:
 |storage|Persistent data management|
 |monitoring|Logs, metrics and cost tracking|
 
-### 5.1 Intelligence Engine
+### 5.1 Intelligence Engine & MacroMarketMapper
 
 The Intelligence Engine processes political and economic events.
 
 Each event must contain:
 
 - Event identifier.
-    
 - Publication timestamp.
-    
 - Source.
-    
 - Country or region.
-    
 - Event category.
-    
 - Affected assets.
-    
-- Actual, forecast and previous values where applicable.
-    
+- Actual, forecast, and previous values where applicable.
+- Surprise magnitude (`Actual - Forecast` normalized vs history).
+- Pre-event market context and priced-in expectations.
 - Reliability assessment.
-    
 - Relevance score.
-    
+
+#### MacroMarketMapper Sub-module
+Markets react to the degree of surprise relative to expectations, current market regime, and prior positioning—not fixed mechanical rules.
+- **Inputs:** Macro/geopolitical event, Actual/Forecast/Previous values, surprise delta, release timestamp, pre-event context.
+- **Outputs:** Candidate affected assets, hypothesis directional impact, expected volatility/magnitude, impact horizon (short/medium/long term), invalidation conditions (factors that reverse the thesis), source attribution and confidence score.
+- **Empirical Validation Loop:** Actual market reaction (price delta across assets at 1m, 15m, 1h, 4h post-release) is captured and persisted to evaluate and calibrate hypothesis accuracy over time, avoiding ungrounded LLM assumptions.
 
 ### 5.2 Decision Engine
 
@@ -284,19 +286,28 @@ ABSTAIN must be available whenever evidence is insufficient, conflicting, outdat
 The Risk Engine must independently validate:
 
 - Position sizing.
-    
 - Stop-loss constraints.
-    
 - Exposure limits.
-    
 - Maximum drawdown rules.
-    
 - Available margin.
-    
 - Spread and slippage conditions.
-    
 
 The AI cannot override risk restrictions.
+
+### 5.4 Human-in-the-Loop & Approval Pipeline (Telegram / Dashboard)
+
+Telegram serves primarily as an operational notification and proposal approval interface, while the risk engine acts as the authoritative gatekeeper.
+
+**Processing Pipeline:**
+`ORACLE Intelligence` → `Signal Generator` → `Independent Risk Engine` → `Telegram Notification (Signal Card)` → `Human Approval / Reject / Modify` → `Revalidate Proposal` → `MT5 Execution Adapter` → `Execution Report`
+
+**Enforced Rules:**
+- **Unique Proposal ID (`proposal_id`):** Every trade proposal must have a strictly unique identifier.
+- **Idempotency & Single Approval:** Proposals cannot be approved twice; double-clicks or duplicate requests are rejected.
+- **Auto-Expiration (TTL):** Stale proposals past their validity window are automatically invalidated.
+- **Price Drift Revalidation:** If market price drifts beyond a defined threshold before approval, the proposal requires recalculation.
+- **Risk Recheck on Modification:** Any user-adjusted parameters (Entry, SL, TP) must pass through the independent Risk Engine again.
+- **Security Boundary:** Telegram Bot instances must never store or access broker credentials; MT5 execution runs via isolated local adapters.
 
 ---
 
@@ -351,28 +362,30 @@ The AI cannot override risk restrictions.
 - Trade thesis generation.
     
 
-### 6.3 Cost Metrics
+### 6.3 Cost Metrics & Empirical Optimization Benchmark
 
 The system must record:
 
 - Input tokens.
-    
 - Output tokens.
-    
 - Cached input tokens.
-    
 - Number of model invocations.
-    
 - Cost per analysis.
-    
 - Cost per asset.
-    
 - Cost per day.
-    
 - Cost per accepted proposal.
-    
 
-Optimization must preserve analytical quality rather than simply minimize token usage.
+Optimization must preserve analytical quality rather than simply minimize token usage. Principle: *Maximize analytical quality per token spent*.
+
+#### Three-Tier Empirical Token Experiment:
+1. **Experiment A (Full Context Baseline):** Full article text, raw releases, and comprehensive context fed to LLM.
+2. **Experiment B (Structured Context Optimized):** Preprocessed JSON with essential economic components (headline, revisions, MoM, sub-indices).
+3. **Experiment C (Minimal Context Token-Efficient):** Stripped-down key numeric deltas and minimal regime indicators.
+
+**Benchmark Evaluation Metrics:**
+- **Cost & Speed:** Input tokens, Output tokens, Latency (ms).
+- **Format Integrity:** JSON schema validity rate.
+- **Analytical Quality:** Directional accuracy, Calibration (confidence vs accuracy), Decision consistency across runs.
 
 ---
 
@@ -494,18 +507,21 @@ Passing these criteria does not establish profitability or authorize live tradin
 
 ---
 
-## 11. Phase 0 Research Questions
+## 11. Phase 0 Research Questions & Workstreams
 
-|ID|Research question|Status|
-|---|---|---|
-|RQ-01|Which market data providers are suitable?|In progress|
-|RQ-02|Which news and economic sources are reliable?|In progress|
-|RQ-03|How should multi-market data be normalized?|Pending|
-|RQ-04|Which LLM providers offer suitable cost/performance?|In progress|
-|RQ-05|How can token usage be minimized?|In progress|
-|RQ-06|How should AI reliability be evaluated?|Pending|
-|RQ-07|Which backtesting methodology is appropriate?|Pending|
-|RQ-08|How should human approval and risk controls work?|In progress|
+|ID|Research question / Workstream|Status|Deliverable|
+|---|---|---|---|
+|RQ-01|Which market data providers are suitable?|In progress|Data Provider Evaluation|
+|RQ-02|Which news and economic sources are reliable?|In progress|News Source Matrix|
+|RQ-03|How should multi-market data be normalized?|Pending|Normalization Schema|
+|RQ-04|Which LLM providers offer suitable cost/performance?|In progress|Model Evaluation Report|
+|RQ-05|How can token usage be minimized?|In progress|Token Optimization Benchmark|
+|RQ-06|How should AI reliability be evaluated?|Pending|Evaluation Framework|
+|RQ-07|Which backtesting methodology is appropriate?|Pending|Backtest Protocol|
+|RQ-08|How should human approval and risk controls work?|In progress|Approval Architecture|
+|P0-09|Macro-to-Market Mapping (Surprise delta, Cross-asset, Empirical logging)|In progress|Macro Event Matrix & Mapper Spec|
+|P0-10|Token Optimization Experiment (Full vs Structured vs Minimal)|In progress|LLM Benchmark Report|
+|P0-11|Human-in-the-Loop Architecture (Telegram lifecycle, Risk Engine gatekeeper)|In progress|Telegram Interaction Prototype Spec|
 
 ---
 

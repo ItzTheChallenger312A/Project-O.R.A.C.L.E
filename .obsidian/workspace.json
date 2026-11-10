@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "research_docs/00 - Project Overview/ORACLE - Research Specification v1.0.md",
+                "file": "docs/00 - Project Overview/decision_log.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "ORACLE - Research Specification v1.0"
+              "title": "decision_log"
             }
           }
         ]
@@ -83,7 +83,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 257.5
   },
   "right": {
     "id": "ec8bf4f9fe63695c",
@@ -99,7 +99,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "research_docs/00 - Project Overview/ORACLE - Research Specification v1.0.md",
+                "file": "docs/00 - Project Overview/ORACLE - Research Specification v1.0.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -118,7 +118,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "research_docs/00 - Project Overview/ORACLE - Research Specification v1.0.md",
+                "file": "docs/00 - Project Overview/ORACLE - Research Specification v1.0.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
@@ -161,7 +161,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "research_docs/00 - Project Overview/ORACLE - Research Specification v1.0.md",
+                "file": "docs/00 - Project Overview/ORACLE - Research Specification v1.0.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -190,8 +190,41 @@
   },
   "active": "b1afa16a0da86d2d",
   "lastOpenFiles": [
-    "research_docs/00 - Project Overview/ORACLE - Research Specification v1.0.md",
-    "research_docs/00 - Project Overview",
-    "research_docs"
+    "README.md",
+    "docs/01 - Overall Research/1.5 - AI Intelligence Experiment/ai_forward_test_report.md",
+    "docs/01 - Overall Research/1.5 - AI Intelligence Experiment/ai_experiment_protocol.md",
+    "docs/01 - Overall Research/1.5 - AI Intelligence Experiment/prompt_specification.md",
+    "docs/01 - Overall Research/1.5 - AI Intelligence Experiment/model_selection.md",
+    "docs/01 - Overall Research/CHECKPOINT/checkpoint_12h_evaluation.md",
+    "docs/01 - Overall Research/1.3 - Baseline Research/baseline_report.md",
+    "docs/01 - Overall Research/1.3 - Baseline Research/baseline_results.md",
+    "docs/01 - Overall Research/1.3 - Baseline Research/baseline_previous_trend.md",
+    "docs/01 - Overall Research/1.3 - Baseline Research/baseline_historical_rate.md",
+    "docs/01 - Overall Research/1.3 - Baseline Research/baseline_random.md",
+    "docs/01 - Overall Research/1.6 - Comparative Evaluation/risk_analysis.md",
+    "docs/01 - Overall Research/1.6 - Comparative Evaluation/statistical_test_report.md",
+    "docs/01 - Overall Research/1.6 - Comparative Evaluation/performance_comparison.md",
+    "docs/01 - Overall Research/1.6 - Comparative Evaluation/evaluation_protocol.md",
+    "docs/01 - Overall Research/1.7 - Final Research Review/go_no_go_decision.md",
+    "docs/01 - Overall Research/1.7 - Final Research Review/final_research_report.md",
+    "docs/00 - Project Overview/assumptions_register.md",
+    "docs/00 - Project Overview/decision_log.md",
+    "docs/00 - Project Overview/research_budget.md",
+    "docs/00 - Project Overview/research_scope.md",
+    "docs/00 - Project Overview/research_plan.md",
+    "docs/00 - Project Overview/research_charter.md",
+    "docs/01 - Overall Research/1.2 - Data Research/data_feasibility_report.md",
+    "docs/01 - Overall Research/1.2 - Data Research/data_quality_report.md",
+    "docs/01 - Overall Research/1.2 - Data Research/data_dictionary.md",
+    "docs/01 - Overall Research/1.7 - Final Research Review",
+    "docs/01 - Overall Research/1.6 - Comparative Evaluation",
+    "docs/01 - Overall Research/1.5 - AI Intelligence Experiment",
+    "docs/01 - Overall Research/1.4 - Prospective Macro Data",
+    "docs/01 - Overall Research/CHECKPOINT",
+    "docs/01 - Overall Research/1.3 - Baseline Research",
+    "docs/01 - Overall Research/1.2 - Data Research",
+    "docs/01 - Overall Research/1.1 Feasibility",
+    "docs/00 - Project Overview",
+    "docs/01 - Overall Research"
   ]
 }
