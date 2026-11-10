@@ -1,2 +1,2 @@
-﻿set_value "pending_research" = 1
+set_value "pending_research" = 1
 
