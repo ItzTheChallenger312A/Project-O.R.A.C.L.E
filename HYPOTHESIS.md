@@ -1,5 +1,5 @@
 # Project O.R.A.C.L.E. — Experiment Charter & Hypothesis
-**Version:** 0.2.0 (Council & GPT Synthesis — Reality-Checked)  
+**Version:** 0.3.0 (Synchronized with Research Charter v0.1.2)  
 **Date:** 2026-11-10  
 **Author:** Dylan (Project Lead)  
 **Status:** Pre-experiment Lock (Đóng băng tiêu chuẩn trước khi thu thập dữ liệu)
@@ -7,15 +7,15 @@
 ---
 
 ## 1. Câu hỏi nghiên cứu (Research Question)
-> **"Liệu việc sử dụng LLM để giải thích các sự kiện kinh tế vĩ mô có tạo ra một hiệu ứng vượt trội đủ lớn (Large Effect: Hit Rate $\ge 62\%$ sau khi trừ 1.5 pips chi phí) so với các quy tắc vĩ mô cứng (Macro Surprise Rule) trên cặp EURUSD trong khung thời gian 1 ngày giao dịch hay không?"**
+> **"Liệu việc sử dụng LLM để giải thích các sự kiện kinh tế vĩ mô có tạo ra lợi thế dự báo (Alpha) thực chất sau khi trừ chi phí giao dịch thực tế (Bid/Ask spread + Slippage) so với các quy tắc vĩ mô (Macro Surprise Rule) và các phương pháp kỹ thuật cơ bản trên cặp EURUSD trong khung thời gian 1 phiên giao dịch hay không?"**
 
 ### Các nguyên tắc bất biến (Non-negotiable Constraints):
 1. **Zero Real-Money Trading:** Không dùng tiền thật dưới mọi hình thức.
-2. **Immutable Audit Trail:** SQLite kích hoạt Trigger cấm tuyệt đối lệnh `UPDATE`/`DELETE`. Mỗi prediction chứa hash SHA-256 liên kết chuỗi (Merkle chain) và được tự động commit lên GitHub để bảo chứng timestamp.
-3. **Phân tách Backtest vs. Forward-test:**
-   - **Baseline 4 (Luật cứng không LLM):** Được phép backtest trên 3–5 năm dữ liệu lịch sử để thiết lập chuẩn mực (benchmark).
-   - **LLM Intelligence:** 100% Forward-testing theo thời gian thực (để triệt tiêu hoàn toàn rủi ro Data Leakage).
-4. **Không đo edge siêu mỏng (No Micro-Edge Chasing):** Từ bỏ việc chứng minh edge mỏng $52\%-54\%$ vì đòi hỏi $>700$ mẫu (tương đương 3 năm chạy live) và sẽ bị spread nuốt chửng. Hệ thống chỉ tìm kiếm **Hiệu ứng Đủ Lớn** ($N \approx 85-100$ mẫu độc lập).
+2. **Immutable Audit Trail:** SQLite kích hoạt Trigger cấm tuyệt đối lệnh `UPDATE`/`DELETE`. Mỗi prediction chứa hash SHA-256 liên kết chuỗi và được tự động commit lên GitHub để bảo chứng timestamp.
+3. **Phân tách Hai trục Nghiên cứu rõ ràng:**
+   - **Historical Price Research (Phase 2):** Kiểm nghiệm 3 baseline kỹ thuật không dùng LLM trên dữ liệu giá quá khứ.
+   - **Prospective Macro Research (Phase 4+):** Thu thập dữ liệu vĩ mô và consensus theo thời gian thực (Point-in-Time) để kiểm nghiệm LLM, triệt tiêu rủi ro Data Leakage.
+4. **Data-First & Dynamic Cost:** Đo lường chi phí trực tiếp từ Bid/Ask thực tế, không dùng số liệu ước tính cố định thiếu cơ sở.
 
 ---
 
@@ -24,40 +24,28 @@
 | Thuộc tính | Lựa chọn chốt | Lý do khoa học |
 | :--- | :--- | :--- |
 | **Cặp tài sản (Instrument)** | `EURUSD` | Cặp tiền thanh khoản cao nhất, spread mỏng nhất, phản ánh tương quan chính sách Fed vs. ECB. |
-| **Khung thời gian (Horizon)** | `1 Trading Day (24H)` | Tránh nhiễu HFT vi mô; kiểm tra khả năng hấp thụ tin tức vĩ mô theo ngày. |
-| **Chi phí giao dịch giả định** | `1.5 pips` cố định | 1.0 pip spread + 0.5 pip trượt giá (slippage) trong các phiên tin mạnh. |
+| **Khung thời gian (Horizon)** | `1 Trading Session — Snapshot-to-Snapshot` | Snapshot: 15:30 `America/New_York`, Prediction window: 15:30–15:35, Friday/Weekend tách cohort riêng. |
+| **Mô hình Chi phí** | `Dynamic Bid/Ask Spread + Volatility Slippage` | Đo lường trực tiếp từ báo giá thực tế của dataset (Long: Buy Ask/Sell Bid; Short: Sell Bid/Buy Ask). |
 | **Cơ chế lưu trữ** | `SQLite Append-Only` | Có SQLite Trigger chặn UPDATE/DELETE + SHA-256 hash validation + Git remote push. |
 
 ---
 
 ## 3. Hệ thống 4 Baselines (Hệ quy chiếu đối thủ)
 
-| Baseline | Tên đối thủ | Cơ chế hoạt động | Phương thức đánh giá |
+| Baseline | Nguồn dữ liệu | Cơ chế hoạt động | Giai đoạn triển khai |
 | :--- | :--- | :--- | :--- |
-| **B1** | **Random Walk** | Tung đồng xu 50/50 ngẫu nhiên. | Lý thuyết xác suất. |
-| **B2** | **Rolling Base Rate** | Tỷ lệ nến xanh/đỏ EURUSD tính trong cửa sổ trượt (Rolling Window) 60 ngày gần nhất (tránh data leakage). | Lịch sử & Realtime. |
-| **B3** | **Yesterday Trend** | Nến Daily hôm qua tăng $\to$ Đoán tăng; giảm $\to$ Đoán giảm. | Lịch sử & Realtime. |
-| **B4** | **Macro Surprise Engine** *(Đối thủ chính)* | Bộ luật cứng định hướng tác động: $Actual$ vs $Forecast$, phân định theo cặp EURUSD (ví dụ: Tin tốt cho USD $\to$ Sell EURUSD). | **Backtest lịch sử 3-5 năm TRƯỚC TIÊN** + Forward-test song song. |
+| **B1: Random Direction** | Random seed | Đoán ngẫu nhiên có kiểm soát | Phase 2 (Historical) |
+| **B2: Historical Base Rate** | Historical price | Tỷ lệ nến tăng/giảm trong 252 phiên rolling | Phase 2 (Historical) |
+| **B3: Previous Trend** | Historical price | Xu hướng phiên liền trước | Phase 2 (Historical) |
+| **B4: Macro Surprise Engine** | Actual vs. Consensus PIT | Bộ luật phản ứng kinh tế vĩ mô chuẩn hóa | Phase 4 trở đi (Prospective) |
 
 ---
 
-## 4. Minimum Detectable Effect (M.D.E.) & Cỡ mẫu thống kê
+## 4. Khung Nghiên cứu Thăm dò & Xác định MDE (Exploratory Framework)
 
-- **Tại sao không nhắm tới Hit Rate 55%?**
-  Để chứng minh $55\%$ khác $50\%$ có ý nghĩa thống kê (Power 80%, $\alpha = 0.05$), cần tới $\approx 780$ mẫu độc lập ($\approx 3$ năm). Thêm vào đó, $55\%$ trừ 1.5 pips spread sẽ đưa lợi nhuận thực tế về ngưỡng hòa vốn hoặc lỗ.
-- **Mục tiêu thực tế của O.R.A.C.L.E.:**
-  - Giả định mục tiêu Hit Rate: $\ge 62\%$.
-  - Cỡ mẫu tối thiểu cần thiết để đạt ý nghĩa thống kê ở mức này: **$N \approx 85 - 100$ sự kiện vĩ mô độc lập**.
-  - Thời gian quan sát dự kiến: **4 đến 6 tháng**.
-
----
-
-## 5. Kế hoạch triển khai hành động (Next Immediate Actions)
-
-### 🎯 Tác vụ đầu tiên (The One Thing to Do First):
-**Backtest duy nhất Baseline 4 (Macro Surprise Rules - Không AI) trên dữ liệu EURUSD 3 năm gần nhất.**
-- Code 1 file Python đơn giản.
-- Tải lịch kinh tế (CPI, NFP, Lãi suất Fed/ECB) 2021–2024.
-- Áp dụng luật phản ứng giá sau 24h trừ 1.5 pips spread.
-- **Nếu Baseline 4 này âm tiền nặng:** Chúng ta biết thị trường đã "discount" tin tức cực nhanh và việc giao dịch theo tin tức vĩ mô 1 ngày là bài toán cực kỳ gian nan.
-- **Nếu Baseline 4 này có lãi hoặc hòa vốn:** Ta có ngay một mốc benchmark hoàn hảo để AI phải vượt qua.
+- **Không ấn định trước ngưỡng Hit Rate cứng:** 
+  Dự án khởi động với tư cách là nghiên cứu thăm dò (Exploratory Research).
+- **Quy trình xác định MDE (Minimum Detectable Effect):**
+  1. Trong Phase 2, đo lường độ biến động thực tế ($\sigma_{\text{daily}}$), phân phối lợi nhuận và spread thực tế từ historical data của EURUSD.
+  2. Dựa vào các tham số thực nghiệm đó, tài liệu phương pháp luận sẽ tính toán chính xác MDE và kích thước mẫu ($N$) cần thiết để đạt đủ năng lực thống kê (Statistical Power $\ge 80\%$).
+  3. Khóa các ngưỡng mục tiêu định lượng chính thức trước khi bước vào Phase 5 (Forward-test).

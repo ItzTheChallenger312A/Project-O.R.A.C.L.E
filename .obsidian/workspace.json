@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "docs/00 - Project Overview/decision_log.md",
+                "file": "README.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "decision_log"
+              "title": "README"
             }
           }
         ]
@@ -188,8 +188,10 @@
       "bases:Create new base": false
     }
   },
-  "active": "b1afa16a0da86d2d",
+  "active": "96c5bb6aa6dedad4",
   "lastOpenFiles": [
+    "docs/00 - Project Overview/research_charter.md",
+    "docs/00 - Project Overview/decision_log.md",
     "README.md",
     "docs/01 - Overall Research/1.5 - AI Intelligence Experiment/ai_forward_test_report.md",
     "docs/01 - Overall Research/1.5 - AI Intelligence Experiment/ai_experiment_protocol.md",
@@ -208,11 +210,9 @@
     "docs/01 - Overall Research/1.7 - Final Research Review/go_no_go_decision.md",
     "docs/01 - Overall Research/1.7 - Final Research Review/final_research_report.md",
     "docs/00 - Project Overview/assumptions_register.md",
-    "docs/00 - Project Overview/decision_log.md",
     "docs/00 - Project Overview/research_budget.md",
     "docs/00 - Project Overview/research_scope.md",
     "docs/00 - Project Overview/research_plan.md",
-    "docs/00 - Project Overview/research_charter.md",
     "docs/01 - Overall Research/1.2 - Data Research/data_feasibility_report.md",
     "docs/01 - Overall Research/1.2 - Data Research/data_quality_report.md",
     "docs/01 - Overall Research/1.2 - Data Research/data_dictionary.md",
